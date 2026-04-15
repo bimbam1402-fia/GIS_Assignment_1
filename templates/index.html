@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Flask Assignment</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Burger menu button -->
+    <button id="menu-toggle" class="burger-btn">☰ Tasks</button>
+
+    <!-- Side menu -->
+    <div id="side-menu" class="side-menu hidden">
+        <h3>Assignment Tasks</h3>
+
+        <!-- Task 1 -->
+        <button class="task-btn" onclick="toggleSubmenu('task1-submenu')">Task 1</button>
+        <div id="task1-submenu" class="submenu hidden">
+            <button onclick="addPoint()">Add Point</button>
+            <button onclick="addLine()">Add Line</button>
+            <button onclick="addPolygon()">Add Polygon</button>
+            <button onclick="clearMap()">Clear Features</button>
+        </div>
+
+        <!-- Task 2 -->
+        <button class="task-btn" onclick="toggleSubmenu('task2-submenu')">Task 2</button>
+        <div id="task2-submenu" class="submenu hidden">
+            <button onclick="showTask2Locations()">Show 5 Locations</button>
+            <button onclick="clearTask2Locations()">Clear Task 2</button>
+        </div>
+
+        <!-- Task 3 -->
+        <button class="task-btn" onclick="toggleSubmenu('task3-submenu')">Task 3</button>
+        <div id="task3-submenu" class="submenu hidden">
+            <button>Subtask 3.1</button>
+        </div>
+
+        <button class="task-btn" onclick="toggleSubmenu('task4-submenu')">Task 4</button>
+        <div id="task4-submenu" class="submenu hidden"></div>
+
+        <button class="task-btn" onclick="toggleSubmenu('task5-submenu')">Task 5</button>
+        <div id="task5-submenu" class="submenu hidden"></div>
+
+        <button class="task-btn" onclick="toggleSubmenu('task6-submenu')">Task 6</button>
+        <div id="task6-submenu" class="submenu hidden"></div>
+
+        <button class="task-btn" onclick="toggleSubmenu('task7-submenu')">Task 7</button>
+        <div id="task7-submenu" class="submenu hidden"></div>
+
+        <button class="task-btn" onclick="toggleSubmenu('task8-submenu')">Task 8</button>
+        <div id="task8-submenu" class="submenu hidden"></div>
+    </div>
+
+    <!-- Keep ONLY this one -->
+    <div id="info-sidebar" class="info-sidebar hidden">
+        <h3>Location Info</h3>
+        <p>Click a Task 2 location marker to see details here.</p>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

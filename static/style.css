@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+#map {
+    height: 100vh;
+    width: 100%;
+}
+
+.burger-btn {
+    position: absolute;
+    top: 100px;
+    left: 15px;
+    z-index: 1001;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid #999;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.side-menu {
+    position: absolute;
+    top: 150px;
+    left: 15px;
+    z-index: 1000;
+    width: 220px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #999;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.side-menu h3 {
+    margin-top: 0;
+}
+
+.side-menu button {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ccc;
+    background: #f8f8f8;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.side-menu button:hover {
+    background: #eaeaea;
+}
+
+.submenu {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.info-sidebar {
+    position: absolute;
+    top: 100px;
+    right: 15px;
+    z-index: 1000;
+    width: 280px;
+    max-height: 75vh;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #999;
+    border-radius: 5px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.info-sidebar img {
+    width: 100%;
+    height: auto;
+    margin-top: 8px;
+    border-radius: 4px;
+}
+
+.hidden {
+    display: none;
+}
