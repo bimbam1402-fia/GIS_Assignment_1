@@ -37,59 +37,70 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 let featureGroup = L.layerGroup().addTo(map);
 
+
+// Task 1: 
+let pointFeature = null;
+let lineFeature = null;
+let polygonFeature = null;
+
 // Task 1: Point
 function addPoint() {
-    const marker = L.marker([60.48411713603965, 15.428019044555626]);
+    if (pointFeature) return;
+    pointFeature = L.marker([60.48411713603965, 15.428019044555626]);
 
-    marker.bindPopup(`
+    pointFeature.bindPopup(`
         <h3>Point Feature</h3>
         <p>This beautiful Borlänge Central Station.</p>
         <img src="/static/images/CentralStation.jpg" alt="Centralstation Borlänge" width="180">
     `);
 
-    marker.addTo(featureGroup);
+    pointFeature.addTo(featureGroup);
 }
 
 // Task 1: Line
 function addLine() {
+    if (lineFeature) return;
+
     const latlngs = [
         [60.48411713603965, 15.428019044555626],
         [60.48190456722427, 15.421187614250112],
         [60.47855617523543, 15.416689067677039]
     ];
 
-    const line = L.polyline(latlngs, { color: 'blue' });
+    lineFeature = L.polyline(latlngs, { color: 'blue' });
 
-    line.bindPopup(`
+    lineFeature.bindPopup(`
         <h3>Line Feature</h3>
         <p>This is how a bird might fly from Centralstation, pass by Ikea, and land at McDonalds.</p>
         <img src="/static/images/pigeon.jpg" alt="Line image" width="180">
     `);
 
-    line.addTo(featureGroup);
+    lineFeature.addTo(featureGroup);
 }
 
 // Task 1: Polygon
 function addPolygon() {
+    if (polygonFeature) return;
+
     const latlngs = [
         [60.504602043609104, 15.45340085770427],
         [60.449754891616344, 15.448974004606674],
         [60.494636729315374, 15.359488331276705]
     ];
 
-    const polygon = L.polygon(latlngs, {
+    polygonFeature = L.polygon(latlngs, {
         color: 'green',
         fillColor: 'lightgreen',
         fillOpacity: 0.5
     });
 
-    polygon.bindPopup(`
+    polygonFeature.bindPopup(`
         <h3>Polygon Feature</h3>
         <p>This is THE place to be in Sweden.</p>
         <img src="/static/images/dalahorse.jpg" alt="On Dalarhorseback" width="180">
     `);
 
-    polygon.addTo(featureGroup);
+    polygonFeature.addTo(featureGroup);
 }
 
 // Clear all features
@@ -175,4 +186,73 @@ function showTask2Locations() {
 function clearTask2Locations() {
     task2Group.clearLayers();
     hideInfoSidebar();
+}
+
+
+// Task 3: 
+
+let task3Group = L.layerGroup().addTo(map);
+
+function showTask3() {
+    task3Group.clearLayers();
+
+    fetch("/static/data/supermarket.geojson")
+        .then(response => response.json())
+        .then(data => {
+            const features = data.features;
+            const buffers = [];
+
+            features.forEach((feature, i) => {
+                const buffer = turf.buffer(feature, 1, { units: "kilometers" });
+                buffers.push({
+                    feature: feature,
+                    buffer: buffer,
+                    overlaps: false
+                });
+            });
+
+            for (let i = 0; i < buffers.length; i++) {
+                for (let j = i + 1; j < buffers.length; j++) {
+                    if (turf.booleanIntersects(buffers[i].buffer, buffers[j].buffer)) {
+                        buffers[i].overlaps = true;
+                        buffers[j].overlaps = true;
+                    }
+                }
+            }
+
+            buffers.forEach(item => {
+                L.geoJSON(item.buffer, {
+                    style: {
+                        color: item.overlaps ? "orange" : "green",
+                        weight: 2,
+                        fillOpacity: 0.15
+                    }
+                }).addTo(task3Group);
+            });
+
+            const geojsonLayer = L.geoJSON(data, {
+                pointToLayer: function(feature, latlng) {
+                    const matched = buffers.find(b => b.feature === feature);
+
+                    return L.circleMarker(latlng, {
+                        radius: 7,
+                        color: matched.overlaps ? "orange" : "blue",
+                        fillColor: matched.overlaps ? "orange" : "limegreen",
+                        fillOpacity: 1,
+                        weight: 2
+                    });
+                },
+                onEachFeature: function(feature, layer) {
+                    const name = feature.properties.name || "Unnamed supermarket";
+                    layer.bindPopup(`<b>${name}</b>`);
+                }
+            }).addTo(task3Group);
+
+            map.fitBounds(geojsonLayer.getBounds(), { padding: [40, 40] });
+        })
+        .catch(error => console.error("Error loading supermarket GeoJSON:", error));
+}
+
+function clearTask3() {
+    task3Group.clearLayers();
 }
