@@ -123,14 +123,14 @@ const task2Locations = [
         name: "Dalarna Science Park",
         coords: [60.48398071854131, 15.410647098563706],
         address: "Forskargatan 3, 781 70 Borlänge",
-        info: "The place to be to larp and get free lunch.",
+        info: "Dalarna Science Park är en samverkansplattform för företagsutveckling, utvecklingsprojekt och en självklar mötespunkt för Dalarnas innovationskraft.",
         image: "/static/images/SciencePark.jpg"
     },
     {
         name: "Bjusanstugan",
         coords: [60.49141001965103, 15.324152713185438],
         address: "Unnamed Road, 781 69 Borlänge",
-        info: "Publicly accessible beautiful place to hide at during weekdays",
+        info: "En rast- och övernattningsstuga som förvaltas av Borlänge kommun. I stugan finns en kamin, bord och bänkar.",
         image: "/static/images/Bjusanstugan.jpg"
     },
     {
@@ -144,7 +144,7 @@ const task2Locations = [
         name: "Uni Dalarna",
         coords: [60.48909355768045, 15.4338153238202],
         address: "Stationsgatan 4, 784 33 Borlänge",
-        info: "Fancy, flaired with modern plastic plants for decoration, coffee that is war crime, more students than seats, falsely claims lectures be open to public",
+        info: "Kvalificerad utbildning och forskning i hjärtat av Dalarna. Studera via distans eller på våra campus i Falun och Borlänge, med närhet till natur",
         image: "/static/images/UniDalarna.jpg"
     }
 ];
