@@ -259,7 +259,7 @@ function clearTask3() {
 
 /* Task 4: */
 var task4Overlay;
-var bounds = [[59.340, 18.085], [59.320, 18.155]];
+var bounds = [[59.3442, 18.0775], [59.3175, 18.1635]];
 
 
 function showTask4() {
