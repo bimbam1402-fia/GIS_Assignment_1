@@ -256,3 +256,39 @@ function showTask3() {
 function clearTask3() {
     task3Group.clearLayers();
 }
+
+/* Task 4: */
+var task4Overlay;
+var bounds = [[59.340, 18.085], [59.320, 18.155]];
+
+
+function showTask4() {
+    
+    if (task4Overlay) {
+        map.removeLayer(task4Overlay);
+    }
+
+    task4Overlay=L.imageOverlay('/static/images/Djurgarden_karta.png', bounds, {
+        opacity: 0.8,
+        interactive: true
+    }).addTo(map);
+    
+    
+    map.fitBounds(bounds);
+}
+
+function clearTask4() {
+    if (task4Overlay) {
+        map.removeLayer(task4Overlay);
+        task4Overlay = null;
+    }
+}
+
+function toggleSubmenu(id) {
+    var submenu = document.getElementById(id);
+    if (submenu.classList.contains('hidden')) {
+        submenu.classList.remove('hidden');
+    } else {
+        submenu.classList.add('hidden');
+    }
+}
