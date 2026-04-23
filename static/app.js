@@ -370,6 +370,105 @@ function clearFuel() {
     }
 }
 
+// Task 6 - Weather API
+
+let weatherLayer;
+
+const cities = [
+    { name: "Borlänge", coords: [60.4858, 15.4371] },
+    { name: "Falun", coords: [60.6035, 15.6256] },
+    { name: "Gävle", coords: [60.6749, 17.1414] },
+    { name: "Uppsala", coords: [59.8586, 17.6389] },
+    { name: "Stockholm", coords: [59.3293, 18.0686] }
+];
+
+function getWeather(city) {
+    const apiKey = "434fff5ba80447475db3da21854d9f4b";
+    
+    return fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.coords[0]}&lon=${city.coords[1]}&appid=${apiKey}&units=metric`)
+    .then(res => res.json());
+}
+
+ function getForecast(city) {
+        const apiKey = "434fff5ba80447475db3da21854d9f4b";
+        
+        return fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${city.coords[0]}&lon=${city.coords[1]}&appid=${apiKey}&units=metric`)
+        .then(res => res.json());
+ }
+
+function loadWeather() {
+
+    if (weatherLayer && map.hasLayer(weatherLayer)) {
+        map.removeLayer(weatherLayer);
+    }
+
+    weatherLayer = L.layerGroup();
+
+    cities.forEach(city => {
+        getWeather(city).then(data => {
+
+            const marker = L.marker(city.coords);
+
+            marker.bindPopup(`
+                <b>${city.name}</b><br>
+                Temp: ${data.main.temp} °C<br>
+                Weather: ${data.weather[0].description}
+            `);
+
+        marker.on("click", () => {
+            getForecast(city).then(forecast => {
+                showWeatherSidebar(city, data, forecast);
+            });
+        });
+
+        weatherLayer.addLayer(marker);
+    });
+});
+
+weatherLayer.addTo(map);
+}
+
+function showWeatherSidebar(city, data, forecast) {
+    const sidebar = document.getElementById("info-sidebar");
+
+    let forecastHtml = "<h4>Forecast</h4>";
+
+    forecast.list.slice(0, 5).forEach(item => {
+        forecastHtml += `
+            <p>
+            ${item.dt_txt}<br>
+            Temp: ${item.main.temp} °C
+            </p>
+        `;
+    });
+
+    sidebar.innerHTML = `
+    <button onclick="closeSidebar()" style="float:right;">X</button>
+        <h3>${city.name}</h3>
+        <p> Temp: ${data.main.temp} °C</p>
+        <p> Wind: ${data.wind.speed} m/s</p>
+        <p> ${data.weather[0].description}</p>
+        <p> Humidity: ${data.main.humidity}%</p>
+        ${forecastHtml}
+    `;
+
+    sidebar.classList.remove("hidden");
+    }
+
+    // Clear
+function clearWeather() {
+    if (weatherLayer && map.hasLayer(weatherLayer)) {
+        map.removeLayer(weatherLayer);
+    }
+        const sidebar = document.getElementById("info-sidebar");
+        sidebar.classList.add("hidden");
+}
+
+    function closeSidebar() {
+    const sidebar = document.getElementById("info-sidebar");
+    sidebar.classList.add("hidden");
+}
+
 function toggleSubmenu(id) {
     var submenu = document.getElementById(id);
     if (submenu.classList.contains('hidden')) {
@@ -377,4 +476,4 @@ function toggleSubmenu(id) {
     } else {
         submenu.classList.add('hidden');
     }
-}
+};

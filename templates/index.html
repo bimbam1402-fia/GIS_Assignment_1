@@ -59,9 +59,12 @@
             <button onclick="loadFuelDonut()">Donut Cluster</button>
             <button onclick="clearFuel()">Clear Clusters</button>
         </div>
-
+        <!-- Task 6 -->
         <button class="task-btn" onclick="toggleSubmenu('task6-submenu')">Task 6</button>
-        <div id="task6-submenu" class="submenu hidden"></div>
+        <div id="task6-submenu" class="submenu hidden">
+        <button onclick="loadWeather()">Load Weather</button>
+        <button onclick="clearWeather()">Clear Weather</button>
+        </div> 
 
         <button class="task-btn" onclick="toggleSubmenu('task7-submenu')">Task 7</button>
         <div id="task7-submenu" class="submenu hidden"></div>
@@ -72,6 +75,7 @@
 
     <!-- Keep ONLY this one -->
     <div id="info-sidebar" class="info-sidebar hidden">
+        <button id="close-sidebar" onclick="closesidebar()">X</button>
         <h3>Location Info</h3>
         <p>Click a Task 2 location marker to see details here.</p>
     </div>
