@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaflet Flask Assignment</title>
 
+    <!-- DonutCluster -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-donutcluster/dist/leaflet.donutcluster.css">
+
+    <!-- MarkerCluster -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css">
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -39,15 +46,19 @@
             <button onclick="showTask3()">Load Supermarkets</button>
             <button onclick="clearTask3()">Clear Task 3</button>
         </div>
-
+        <!-- Task 4 -->
         <button class="task-btn" onclick="toggleSubmenu('task4-submenu')">Task 4</button>
         <div id="task4-submenu" class="submenu hidden">
             <button onclick="showTask4()">Load overlay</button>
             <button onclick="clearTask4()">Clear Task 4</button>
         </div>
-
+        <!-- Task 5 -->
         <button class="task-btn" onclick="toggleSubmenu('task5-submenu')">Task 5</button>
-        <div id="task5-submenu" class="submenu hidden"></div>
+        <div id="task5-submenu" class="submenu hidden">
+            <button onclick="loadFuelCluster()">Marker Cluster</button>
+            <button onclick="loadFuelDonut()">Donut Cluster</button>
+            <button onclick="clearFuel()">Clear Clusters</button>
+        </div>
 
         <button class="task-btn" onclick="toggleSubmenu('task6-submenu')">Task 6</button>
         <div id="task6-submenu" class="submenu hidden"></div>
@@ -67,7 +78,12 @@
 
     <div id="map"></div>
 
+    
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-donutcluster/dist/leaflet.donutcluster.js"></script>
+
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>

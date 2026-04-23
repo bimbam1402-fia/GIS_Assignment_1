@@ -284,6 +284,92 @@ function clearTask4() {
     }
 }
 
+// Task 5
+
+let fuelLayer;
+
+// Task 5 - MarkerCluster
+function loadFuelCluster() {
+    console.log("CLICKED");
+
+    if (fuelLayer && map.hasLayer(fuelLayer)) {
+        map.removeLayer(fuelLayer);
+    }
+
+    fuelLayer = L.markerClusterGroup();
+
+    fetch("/static/data/fuel.geojson")
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            L.geoJSON(data, {
+                pointToLayer: function (feature, latlng) {
+                    const marker = L.marker(latlng);
+                    marker.bindPopup(feature.properties?.name || "No name");
+                    return marker;
+                }
+            }).addTo(fuelLayer);
+
+            fuelLayer.addTo(map);
+
+            map.fitBounds(fuelLayer.getBounds());
+        })
+}
+
+// Task 5.1 - DonutCluster
+function loadFuelDonut() {
+    if (fuelLayer && map.hasLayer(fuelLayer)) {
+        map.removeLayer(fuelLayer);
+    }
+
+    fuelLayer = L.markerClusterGroup({
+        iconCreateFunction: function (cluster) {
+            const count = cluster.getChildCount();
+
+            return L.divIcon({
+                html: `<div style="
+                    background: red;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    color:white;
+                    font-weight:bold;
+                ">${count}</div>`,
+                className: "custom-donut",
+                iconSize: L.point(40, 40)
+            });
+        }
+    });
+
+    fetch("/static/data/fuel.geojson")
+        .then(res => res.json())
+        .then(data => {
+
+            L.geoJSON(data, {
+                pointToLayer: function (feature, latlng) {
+                    const marker = L.marker(latlng);
+                    marker.bindPopup(feature.properties?.name || "No name");
+                    return marker;
+                }
+            }).addTo(fuelLayer);
+
+            fuelLayer.addTo(map);
+            map.fitBounds(fuelLayer.getBounds());
+        })
+        .catch(err => console.error(err));
+}
+
+// Clear
+function clearFuel() {
+    if (fuelLayer) {
+        map.removeLayer(fuelLayer);
+    }
+}
+
 function toggleSubmenu(id) {
     var submenu = document.getElementById(id);
     if (submenu.classList.contains('hidden')) {
