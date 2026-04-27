@@ -477,3 +477,110 @@ function toggleSubmenu(id) {
         submenu.classList.add('hidden');
     }
 };
+
+
+// Task 7
+
+const schoolClusterGroup = L.layerGroup().addTo(map);
+
+function showSchoolClusters() {
+    schoolClusterGroup.clearLayers();
+    legend.addTo(map);
+
+    fetch("/school-clusters")
+        .then(response => response.json())
+        .then(data => {
+            const schools = data.schools;
+            const centroids = data.centroids;
+
+            const clusterColors = {
+                0: "red",
+                1: "blue",
+                2: "green",
+                3: "purple"
+            };
+
+            schools.forEach(function(school) {
+                const lat = school.ycoord;
+                const lon = school.xcoord;
+                const cluster = school.cluster;
+
+                const marker = L.circleMarker([lat, lon], {
+                    radius: 7,
+                    color: clusterColors[cluster],
+                    fillColor: clusterColors[cluster],
+                    fillOpacity: 0.8
+                });
+
+                marker.bindPopup(`
+                    <strong>${school.Name}</strong><br>
+                    ${school.description}<br>
+                    <strong>Cluster:</strong> ${cluster}
+                `);
+
+                marker.addTo(schoolClusterGroup);
+            });
+
+            centroids.forEach(function(center) {
+                const centroidMarker = L.circleMarker([center.ycoord, center.xcoord], {
+                    radius: 14,
+                    color: "black",
+                    fillColor: clusterColors[center.cluster],
+                    fillOpacity: 0.35,
+                    weight: 3
+                    //interactive: false
+                });
+
+                centroidMarker.on('click', function(e) {
+                    e.originalEvent.stopPropagation();
+                });
+
+                centroidMarker.bindPopup(`
+                    <strong>Cluster ${center.cluster} centroid</strong><br>
+                    Longitude: ${center.xcoord.toFixed(4)}<br>
+                    Latitude: ${center.ycoord.toFixed(4)}
+                `);
+
+                centroidMarker.addTo(schoolClusterGroup);
+                centroidMarker.bringToBack();
+            });
+
+            const bounds = L.latLngBounds(
+                schools.map(school => [school.ycoord, school.xcoord])
+            );
+
+            map.fitBounds(bounds, { padding: [40, 40] });
+        });
+}
+
+// make a legend of clusters
+const legend = L.control({ position: "bottomright" });
+
+legend.onAdd = function () {
+    const div = L.DomUtil.create("div", "info legend");
+
+    const colors = {
+        0: "red",
+        1: "blue",
+        2: "green",
+        3: "purple"
+    };
+
+    div.innerHTML = "<strong>Clusters</strong><br>";
+
+    for (const key in colors) {
+        div.innerHTML += `
+            <i style="background:${colors[key]}; width:12px; height:12px; display:inline-block; margin-right:5px;"></i>
+            Cluster ${key}<br>
+        `;
+    }
+
+    return div;
+};
+
+legend.addTo(map);
+
+function clearSchoolClusters() {
+    schoolClusterGroup.clearLayers();
+    map.removeControl(legend);
+}
