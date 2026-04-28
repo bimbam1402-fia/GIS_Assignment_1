@@ -584,3 +584,100 @@ function clearSchoolClusters() {
     schoolClusterGroup.clearLayers();
     map.removeControl(legend);
 }
+
+/* Task 8 */ 
+// 1. Skapa en LayerGroup för Task 8 (lägg denna högst upp i app.js)
+let task8LayerGroup = L.layerGroup();
+
+// 2. Själva analysfunktionen
+async function solveTask8() {
+    console.log("Task 8: Startar analys...");
+    
+    // Rensa gamla lager och lägg till i kartan
+    task8LayerGroup.clearLayers();
+    task8LayerGroup.addTo(map);
+
+    try {
+        // Ladda data (Anpassa filvägen om du inte använder /data/ mappen)
+        const schoolData = await loadCSV("static/data/school_locations.csv", ",");
+        const popData = await loadCSV("static/data/Stockholm_pop.csv", ";");
+
+        // Skapa GeoJSON-punkter för skolor (xcoord=long, ycoord=lat)
+        const schoolFeatures = schoolData
+            .filter(d => d.xcoord && d.ycoord)
+            .map(d => turf.point([parseFloat(d.xcoord), parseFloat(d.ycoord)], { name: d.Name }));
+
+        // Skapa GeoJSON-punkter för befolkning (Longitude, Latitude)
+        const popFeatures = popData
+            .filter(d => d.Longitude && d.Latitude)
+            .map(d => turf.point([parseFloat(d.Longitude), parseFloat(d.Latitude)], { pop: d.Population }));
+
+        if (schoolFeatures.length === 0 || popFeatures.length === 0) {
+            alert("Kunde inte läsa in koordinater. Kontrollera CSV-filernas rubriker!");
+            return;
+        }
+
+        // --- BUFFER OCH UNION LOGIK ---
+        // Skapa alla 2km buffertar
+        const schoolBuffers = schoolFeatures.map(f => turf.buffer(f, 2, { units: 'kilometers' }));
+
+        // Slå samman alla buffertar (Union) med loop-metoden för att undvika versionsfel
+        let combinedBuffer = schoolBuffers[0];
+        for (let i = 1; i < schoolBuffers.length; i++) {
+            combinedBuffer = turf.union(turf.featureCollection([combinedBuffer, schoolBuffers[i]]));
+        }
+
+        // --- FILTRERING ---
+        // Hitta de befolkningspunkter som INTE är inuti det sammanslagna buffertområdet
+        const nonOverlappingPoints = popFeatures.filter(p => !turf.booleanPointInPolygon(p, combinedBuffer));
+
+        console.log(`Hittade ${nonOverlappingPoints.length} punkter som inte överlappar.`);
+
+        // --- VISUALISERING ---
+        // 1. Rita ut buffertområdet (Blå skugga)
+        L.geoJSON(combinedBuffer, {
+            style: { color: 'blue', weight: 1, fillOpacity: 0.1, interactive: false }
+        }).addTo(task8LayerGroup);
+
+        // 2. Rita ut de "vinnande" punkterna (Röda cirklar)
+        const resultLayer = L.geoJSON(turf.featureCollection(nonOverlappingPoints), {
+            pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: "#ff0000",
+                color: "#fff",
+                weight: 2,
+                fillOpacity: 0.9
+            })
+        }).bindPopup(layer => `<b>Befolkning:</b> ${layer.feature.properties.pop}`);
+
+        resultLayer.addTo(task8LayerGroup);
+
+        // Zooma så att alla röda punkter syns
+        if (nonOverlappingPoints.length > 0) {
+            map.fitBounds(resultLayer.getBounds());
+        } else {
+            alert("Inga punkter hittades utanför zonerna.");
+        }
+
+    } catch (error) {
+        console.error("Task 8 Error:", error);
+    }
+}
+
+// 3. Rensningsfunktion
+function clearTask8() {
+    task8LayerGroup.clearLayers();
+    map.removeLayer(task8LayerGroup);
+}
+function loadCSV(url) {
+    return new Promise((resolve, reject) => {
+        Papa.parse(url, {
+            download: true,
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true,
+            complete: (results) => resolve(results.data),
+            error: (err) => reject(err)
+        });
+    });
+}

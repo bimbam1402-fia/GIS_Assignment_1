@@ -14,6 +14,11 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Turf -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
+ 
 </head>
 <body>
 
@@ -73,8 +78,12 @@
             <button onclick="clearSchoolClusters()">Clear Clusters</button>
         </div>
 
+        <!-- Task 8 -->
         <button class="task-btn" onclick="toggleSubmenu('task8-submenu')">Task 8</button>
-        <div id="task8-submenu" class="submenu hidden"></div>
+        <div id="task8-submenu" class="submenu hidden">
+            <button class="run-btn" onclick="solveTask8()">Analyze Population</button>
+            <button class="clear-btn" onclick="clearTask8()">Clear Task 8</button>
+        </div>
     </div>
 
     <!-- Keep ONLY this one -->
@@ -92,7 +101,7 @@
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-donutcluster/dist/leaflet.donutcluster.js"></script>
 
-    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
