@@ -578,7 +578,7 @@ legend.onAdd = function () {
     return div;
 };
 
-legend.addTo(map);
+//legend.addTo(map);
 
 function clearSchoolClusters() {
     schoolClusterGroup.clearLayers();
