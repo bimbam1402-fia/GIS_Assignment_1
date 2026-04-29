@@ -12,11 +12,15 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css">
 
+        <!-- Turf -->
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.5.0/turf.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-    <!-- Turf -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+   
     
  
 </head>
@@ -101,7 +105,7 @@
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-donutcluster/dist/leaflet.donutcluster.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+   <!--  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script> -->
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
