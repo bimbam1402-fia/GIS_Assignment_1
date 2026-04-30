@@ -422,6 +422,9 @@ function loadWeather() {
         });
 
         weatherLayer.addLayer(marker);
+
+        const bounds = L.latLngBounds(cities.map(c => c.coords));
+        map.fitBounds(bounds, { padding: [40, 40] });
     });
 });
 
