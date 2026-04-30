@@ -55,6 +55,7 @@ function addPoint() {
     `);
 
     pointFeature.addTo(featureGroup);
+
 }
 
 // Task 1: Line
@@ -196,6 +197,8 @@ let task3Group = L.layerGroup().addTo(map);
 function showTask3() {
     task3Group.clearLayers();
 
+     task3Legend.addTo(map);
+
     fetch("/static/data/supermarket.geojson")
         .then(response => response.json())
         .then(data => {
@@ -253,8 +256,27 @@ function showTask3() {
         .catch(error => console.error("Error loading supermarket GeoJSON:", error));
 }
 
+
+// legend for Task 3
+const task3Legend = L.control({ position: "bottomright" });
+
+task3Legend.onAdd = function () {
+    const div = L.DomUtil.create("div", "legend task3-legend");
+
+    div.innerHTML = `
+        <h4>Supermarkets 1 km Buffer</h4>
+        
+        <p><span class="legend-dot orange-dot"></span> Supermarket with overlap</p>
+        <p><span class="legend-dot green-dot"></span> Supermarket without overlap</p>
+    `;
+
+    return div;
+};
+
+
 function clearTask3() {
     task3Group.clearLayers();
+    map.removeControl(task3Legend);
 }
 
 /* Task 4: */
@@ -569,7 +591,7 @@ legend.onAdd = function () {
         3: "purple"
     };
 
-    div.innerHTML = "<strong>Clusters</strong><br>";
+    div.innerHTML = "<strong>School Clusters</strong><br>";
 
     for (const key in colors) {
         div.innerHTML += `
