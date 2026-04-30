@@ -621,10 +621,10 @@ function clearSchoolClusters() {
 }
 
 /* Task 8 */ 
-// 1. Skapa en LayerGroup för Task 8 (lägg denna högst upp i app.js)
+
 let task8LayerGroup = L.layerGroup();
 
-// 2. Själva analysfunktionen
+
 async function solveTask8() {
     console.log("Task 8: Startar...");
     if (typeof turf === 'undefined') {
@@ -640,38 +640,36 @@ async function solveTask8() {
         const schoolData = await loadCSV("static/data/school_locations.csv", ",");
         const popData = await loadCSV("static/data/Stockholm_pop.csv", ";");
 
-        // 1. Skapa skolor
+        
         const schoolFeatures = schoolData
             .filter(d => d.xcoord && d.ycoord)
             .map(d => turf.point([parseFloat(d.xcoord), parseFloat(d.ycoord)]));
 
-        // 2. Skapa befolkning
+        
         const popFeatures = popData
             .filter(d => d.Longitude && d.Latitude)
             .map(d => turf.point([parseFloat(d.Longitude), parseFloat(d.Latitude)], { pop: d.Population }));
 
-        // 3. Skapa buffertar
+     
         const schoolBuffers = schoolFeatures.map(f => turf.buffer(f, 2, { units: 'kilometers' }));
 
-        // 4. ERSÄTT UNION MED COMBINE (Mycket stabilare)
-        // Combine skapar en enda MultiPolygon av alla små cirklar
+        
             const combinedResult = turf.combine(turf.featureCollection(schoolBuffers));
             const finalBufferArea = combinedResult.features[0]; 
 
-        // 5. Filtrera punkter
-        // Vi kollar om punkten ligger inuti vår sammanslagna MultiPolygon
+      
         const outsidePoints = popFeatures.filter(p => {
             return !turf.booleanPointInPolygon(p, finalBufferArea);
         });
 
         console.log("Analys klar. Hittade " + outsidePoints.length + " punkter.");
 
-        // 6. Rita ut buffert-ytan
+       
         L.geoJSON(finalBufferArea, {
             style: { color: 'blue', weight: 1, fillOpacity: 0.1, interactive: false}
         }).addTo(task8LayerGroup);
 
-        // 7. Rita ut de röda punkterna
+    
         const resLayer = L.geoJSON(turf.featureCollection(outsidePoints), {
             pointToLayer: (f, latlng) => L.circleMarker(latlng, {
                 radius: 7,
@@ -725,7 +723,7 @@ function clearTask8() {
     map.removeLayer(task8LayerGroup);
 }
 function loadCSV(url, delimiter) {
-    // Tvinga URL:en att utgå från serverns rot
+    
     const absoluteUrl = window.location.origin + (url.startsWith('/') ? '' : '/') + url;
     
     return new Promise((resolve, reject) => {
