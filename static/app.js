@@ -43,6 +43,8 @@ let pointFeature = null;
 let lineFeature = null;
 let polygonFeature = null;
 
+
+
 // Task 1: Point
 function addPoint() {
     if (pointFeature) return;
@@ -55,8 +57,11 @@ function addPoint() {
     `);
 
     pointFeature.addTo(featureGroup);
-
+    // const bounds = L.latLngBounds(pointFeature.map(loc => loc.coords));
+    // map.fitBounds(bounds, { padding: [40, 40] });
+    map.setView([60.48411713603965, 15.428019044555626], 15);
 }
+
 
 // Task 1: Line
 function addLine() {
@@ -102,11 +107,16 @@ function addPolygon() {
     `);
 
     polygonFeature.addTo(featureGroup);
+    map.fitBounds(polygonFeature.getBounds(), { padding: [40, 40] });
 }
 
 // Clear all features
 function clearMap() {
     featureGroup.clearLayers();
+
+    pointFeature = null;
+    lineFeature = null;
+    polygonFeature = null;
 }
 
 // Task 2 locations
