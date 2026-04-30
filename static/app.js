@@ -624,6 +624,7 @@ async function solveTask8() {
 
     task8LayerGroup.clearLayers();
     task8LayerGroup.addTo(map);
+    task8Legend.addTo(map);
 
     try {
         const schoolData = await loadCSV("static/data/school_locations.csv", ",");
@@ -680,6 +681,33 @@ async function solveTask8() {
         alert("Något gick fel: " + error.message);
     }
 }
+
+const task8Legend = L.control({ position: "bottomright" });
+
+task8Legend.onAdd = function () {
+    const div = L.DomUtil.create("div", "info legend");
+
+    const colors = {
+        0: "blue",
+        1: "red",
+
+    };
+        const labels = {
+        0: "2 km buffert",
+        1: "Non-overlapping population points"
+    };
+
+    div.innerHTML = "<strong>Task 8 legend</strong><br>";
+
+    for (const key in colors) {
+        div.innerHTML += `
+            <i style="background:${colors[key]}; width:12px; height:12px; display:inline-block; margin-right:5px;"></i>
+            ${labels[key]}<br>
+        `;
+    }
+
+    return div;
+};
 
 
 function clearTask8() {
